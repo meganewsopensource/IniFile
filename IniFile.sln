@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IniFile", "IniFile\IniFile.csproj", "{3FB7A8CC-C04C-4D7D-9EEA-4F476FCB6778}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IniFile.Test", "IniFile.Test\IniFile.Test.csproj", "{B8E79062-9092-4F5A-9C40-EA65F64DDF7F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3FB7A8CC-C04C-4D7D-9EEA-4F476FCB6778}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FB7A8CC-C04C-4D7D-9EEA-4F476FCB6778}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FB7A8CC-C04C-4D7D-9EEA-4F476FCB6778}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FB7A8CC-C04C-4D7D-9EEA-4F476FCB6778}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8E79062-9092-4F5A-9C40-EA65F64DDF7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E79062-9092-4F5A-9C40-EA65F64DDF7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E79062-9092-4F5A-9C40-EA65F64DDF7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E79062-9092-4F5A-9C40-EA65F64DDF7F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
