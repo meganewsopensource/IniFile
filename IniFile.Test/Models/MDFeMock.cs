@@ -1,24 +1,24 @@
 namespace IniFile.Test.Models;
 
-[IniFile.IniSection("ide")]
+[IniSection("ide")]
 public class MDFeMock
 {
-    [IniFile.IniProperty("cUF")]
+    [IniProperty("cUF")]
     public int UF { get; set; }
-    [IniFile.IniProperty("tpAmb")]
+    [IniProperty("tpAmb")]
     public int Ambiente { get; set; }
-    [IniFile.IniProperty("tpEmit")]
+    [IniProperty("tpEmit")]
     public int TipoEmitente { get; set; }
-    [IniFile.IniProperty("mod")]
+    [IniProperty("mod")]
     public string Modelo { get; set; }
-    [IniFile.IniProperty("serie")]
+    [IniProperty("serie")]
     public string Serie { get; set; }
 
-    [IniFile.IniProperty("perc")]
+    [IniProperty("perc")]
     public IEnumerable<Percurso> Percursos { get; set; }
 
     
-    [IniFile.IniProperty("emit")]
+    [IniProperty("emit")]
     public Emitente Emitente { get; set; }
     
     public MDFeMock()
@@ -63,28 +63,28 @@ public class MDFeMock
 
 public class Percurso
 {
-    [IniFile.IniProperty("UFPer")]
+    [IniProperty("UFPer")]
     public string UF { get; set; }
 }
 
 public class Emitente
 {
-    [IniFile.IniProperty("CNPJCPF")]
+    [IniProperty("CNPJCPF")]
     public string CNPJCPF { get; set; }
-    [IniFile.IniProperty("IE")]
+    [IniProperty("IE")]
     public string IE { get; set; }
-    [IniFile.IniProperty("xNome")]
+    [IniProperty("xNome")]
     public string Nome { get; set; }
-    [IniFile.IniProperty("xFant")]
+    [IniProperty("xFant")]
     public string Fantasia { get; set; }
     
-    [IniFile.IniProperty("xLgr")]
+    [IniProperty("xLgr")]
     public string Logradouro { get; set; }
     
-    [IniFile.IniProperty("nro")]
+    [IniProperty("nro")]
     public string Numero { get; set; }
     
-    [IniFile.IniProperty("xCpl")]
+    [IniProperty("xCpl")]
     public string Complemento { get; set; }
   
     

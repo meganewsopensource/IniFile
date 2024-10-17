@@ -2,30 +2,30 @@ using System.Collections.Immutable;
 
 namespace IniFile.Test.Models;
 
-[IniFile.IniSection("Pedido")]
+[IniSection("Pedido")]
 internal class PedidoMock : IniFile.IniFileSerializer<PedidoMock>
 { 
  
     
-    //[IniFile.IniProperty("data")]
+    //[IniProperty("data")]
     private DateTime? data;
     
-   // [IniFile.IniProperty("hora")]
+   // [IniProperty("hora")]
     private DateTime? hora;
 
- //   [IniFile.IniProperty("status")] 
+ //   [IniProperty("status")] 
     private StatusPedido status;
     
- //   [IniFile.IniProperty("cliente")]
+ //   [IniProperty("cliente")]
     private ClienteMock clienteMock;
     
- //   [IniFile.IniProperty("produto")]
+ //   [IniProperty("produto")]
     private ProdutoMock produto;
     
-  //  [IniFile.IniProperty("itemPedido")]
+  //  [IniProperty("itemPedido")]
     private IImmutableList<ItemPedidoMock> itens;
     
-    [IniFile.IniProperty("pagamento")]
+    [IniProperty("pagamento")]
     private IImmutableList<Pagamento> pagamentos;
 
 
@@ -68,13 +68,13 @@ internal class PedidoMock : IniFile.IniFileSerializer<PedidoMock>
 internal class ItemPedidoMock(int idProduto, double quantidade, decimal precoVenda)
 {
 
-    [IniFile.IniProperty("idProduto")]
+    [IniProperty("idProduto")]
     private int idProduto = idProduto;
     
-    [IniFile.IniProperty("qtd")]
+    [IniProperty("qtd")]
     private double quantidade = quantidade;
     
-    [IniFile.IniProperty("prcoVenda")]
+    [IniProperty("prcoVenda")]
     private decimal precoVenda = precoVenda;
     
    
@@ -95,16 +95,16 @@ internal enum StatusPedido
 
 internal class ProdutoMock(uint id, string descricao, double preco, double estoque)
 {
-    [IniFile.IniProperty("codigo")]
+    [IniProperty("codigo")]
     private uint id = id;
     
-    [IniFile.IniProperty("xDescr")]
+    [IniProperty("xDescr")]
     private string descricao = descricao;
     
-    [IniFile.IniProperty("pco")]
+    [IniProperty("pco")]
     private double preco = preco;
     
-    [IniFile.IniProperty("estoque")]
+    [IniProperty("estoque")]
     private double estoque = estoque;
     
     
@@ -112,13 +112,13 @@ internal class ProdutoMock(uint id, string descricao, double preco, double estoq
 
 internal class ClienteMock
 {
-    [IniFile.IniProperty("CPFCNPJ")]
+    [IniProperty("CPFCNPJ")]
     private string cpfCnpj;
     
-    [IniFile.IniProperty("xNome")]
+    [IniProperty("xNome")]
     private string nome;
     
-    [IniFile.IniProperty("pessoa")]
+    [IniProperty("pessoa")]
     private TipoPessoa pessoa;
 
     internal ClienteMock()
@@ -147,18 +147,18 @@ internal enum FormaPagamento
 
 internal class Pagamento(FormaPagamento formaPagamento, IList<Parcela> parcelas)
 {
-    [IniFile.IniProperty("formaPagamento")]
+    [IniProperty("formaPagamento")]
     private FormaPagamento formaPagamento = formaPagamento;
-    [IniFile.IniProperty("parcela")]
+    [IniProperty("parcela")]
     private IList<Parcela> parcelas = parcelas;
 }
 
 internal class Parcela(int parcela, double valor, DateTime vencimento)
 {
-    [IniFile.IniProperty("nroParcela")]
+    [IniProperty("nroParcela")]
     private int parcela = parcela;
-    [IniFile.IniProperty("val")]
+    [IniProperty("val")]
     private double valor = valor;
-    [IniFile.IniProperty("venc")]
+    [IniProperty("venc")]
     private DateTime vencimento = vencimento;
 }

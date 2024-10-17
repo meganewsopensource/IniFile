@@ -8,19 +8,19 @@ public class IniFileTest
     
     string ExpectS = $"[MyClass]{Environment.NewLine}Property=FristProperty{Environment.NewLine}";
     
-    [IniFile.IniSection("MyClass")]
+    [IniSection("MyClass")]
     internal class MyClass
     {
-        [IniFile.IniProperty("Property")]
+        [IniProperty("Property")]
         private string _property;
 
-        [IniFile.IniProperty("PropertyNoRequired","10",false)]
+        [IniProperty("PropertyNoRequired","10",false)]
         private uint _propertyNoRequired;
         
-        [IniFile.IniProperty("nestedClass")]
+        [IniProperty("nestedClass")]
         private MyNestedClass _nestedClass;
         
-        [IniFile.IniProperty("nestedListClass")]
+        [IniProperty("nestedListClass")]
         private IImmutableList<MyNestedClass> _nestedListClass;
         
 
@@ -40,10 +40,10 @@ public class IniFileTest
     
     internal class MyNestedClass
     {
-        [IniFile.IniProperty("NestedProperty")]
+        [IniProperty("NestedProperty")]
         private string _nestedProperty;
         
-        [IniFile.IniProperty("DoubleNestedProperty","10.45",false)]
+        [IniProperty("DoubleNestedProperty","10.45",false)]
         private double _nestedDoubleProperty;
 
         public MyNestedClass(string nestedProperty, double nestedDoubleProperty)

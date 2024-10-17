@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text;
 
@@ -7,24 +8,8 @@ namespace IniFile;
 
 public class IniFile
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class IniPropertyAttribute(string name, string @default = "", bool required = true) : Attribute
-    {
-        internal string Name { get; } = name;
-        internal bool Required { get; } = required;
-        internal string Default { get; } = @default;
-
-    }
-
    
-    
-    [AttributeUsage(AttributeTargets.Class)]
-    public class IniSectionAttribute(string name) : Attribute
-    {
-        internal string Name { get; } = name;
-    }
-
-
+  
    
 
     public static string ObjectToIni(object obj)
@@ -51,9 +36,6 @@ public class IniFile
         
         var fields = obj.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
             .Where(e => e.GetCustomAttributes(typeof(IniPropertyAttribute)).Any());
-        
-        // var properties = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-        //     .Where(e => e.GetCustomAttributes(typeof(IniPropertyAttribute)).Any());
 
         foreach (var property in fields)
         {
