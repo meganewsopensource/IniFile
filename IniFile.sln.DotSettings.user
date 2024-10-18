@@ -20,7 +20,7 @@
     &lt;TestId&gt;xUnit::B8E79062-9092-4F5A-9C40-EA65F64DDF7F::net8.0::IniFile.Test.IniFileTest.TestIniWriter&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=96f97607_002Dcb61_002D4637_002Da013_002D8a78d4caa567/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="TestIniWriter #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=96f97607_002Dcb61_002D4637_002Da013_002D8a78d4caa567/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestIniWriter #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::B8E79062-9092-4F5A-9C40-EA65F64DDF7F::net8.0::IniFile.Test.IniFileTest.TestIniWriter&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
@@ -31,7 +31,7 @@
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ad090099_002D7f2f_002D4ef2_002Da351_002D23ba0f5d5ced/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ad090099_002D7f2f_002D4ef2_002Da351_002D23ba0f5d5ced/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::B8E79062-9092-4F5A-9C40-EA65F64DDF7F::net8.0::IniFile.Test.IniFileTest.Test&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::B8E79062-9092-4F5A-9C40-EA65F64DDF7F::net8.0::IniFile.Test.IniFileTest.TestTiposDeDados&lt;/TestId&gt;&#xD;

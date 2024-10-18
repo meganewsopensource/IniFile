@@ -87,6 +87,16 @@ public class IniFileTest
         var infoCteSectionaqui = iniWriter.WriteSection("infoCte", true, descSection2?.Name);
         infoCteSectionaqui?.AddItem("valor_info_cte","valor");
         
+        var infoCteMaisUma = iniWriter.WriteSection("infoCte", true, descSection2?.Name);
+        infoCteMaisUma?.AddItem("valor_info_cte_mais_uma","valor");
+        
+        var infoCteMaisOutra = iniWriter.WriteSection("infoCte", true, descSection2?.Name);
+        infoCteMaisOutra?.AddItem("valor_info_cte_mais_outra","valor");
+        
+        
+        var infoCteMaisOutraDentro = iniWriter.WriteSection("peri", true, infoCteMaisOutra?.Name);
+        infoCteMaisOutraDentro?.AddItem("valor_info_cte_mais_outra_dentro","valor");
+        
         // var descSection2 = iniWriter.WriteSection("DESC", true, null);
         // iniWriter.Write(descSection2,"item_valor_1","valor");
         //
