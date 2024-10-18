@@ -10,7 +10,7 @@ public class FormatNumericAttribute : DisplayFormatAttribute
     
     public FormatNumericAttribute(int DecimalPlaces, string CultureInfo = "en-US")
     {
-        DataFormatString = "{0:N" + DecimalPlaces.ToString() + "}";
+        DataFormatString = "F" + DecimalPlaces.ToString();
         _culture = CultureInfo;
     }
 
@@ -28,7 +28,7 @@ public class FormatNumericAttribute : DisplayFormatAttribute
     }
 }
 
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 public class FormatDateAttribute : DisplayFormatAttribute
 {
     public FormatDateAttribute()
@@ -37,16 +37,16 @@ public class FormatDateAttribute : DisplayFormatAttribute
     }
 }
 
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 public class FormatTimeAttribute : DisplayFormatAttribute
 {
     public FormatTimeAttribute()
     {
-        DataFormatString = "c";
+        DataFormatString = "{0:HH:mm:ss}";
     }
 }
 
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 public class FormatDateAndTimeAttribute : DisplayFormatAttribute
 {
     public FormatDateAndTimeAttribute()
