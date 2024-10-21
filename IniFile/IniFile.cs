@@ -2,71 +2,71 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace IniFile;
 
-
 public class IniFile
 {
-   
-  
-   
-
-    public static string ObjectToIni(object obj)
+    public static string ObjectToIni(object serializableObject)
     {
-        return ObjectToIniSection(obj);
+        IniWriter iniWriter = new();
+
+        var fields = serializableObject.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+          .Where(e => e.GetCustomAttributes(typeof(IniPropertyAttribute)).Any());
+
+        if (serializableObject.GetType().GetCustomAttribute<IniSectionAttribute>() == null && ContainsSimpleType(fields))
+        {
+            throw new Exception($"A classe {serializableObject.GetType()} não contém o atributo IniSection");
+        }
+
+        Section? section = null;
+        if (ContainsSimpleType(fields))
+        {
+            var sectionName = GetSectionNameFromSectionAttribute(serializableObject.GetType());
+            section = iniWriter.CreateSection(sectionName);
+        }
+
+        WriteToIni(iniWriter,serializableObject, section, null);
+
+        var content = iniWriter.ToString();
+        return content;
     }
 
-    private static string GetSectionName(Type objectType, string? initialSectionName)
+    private static string GetSectionNameFromSectionAttribute(Type objectType)
     {
-        if (initialSectionName != null)
-            return initialSectionName;
-        
         var sessionAttribute = objectType.GetCustomAttribute<IniSectionAttribute>();
         return sessionAttribute != null ? sessionAttribute.Name : objectType.Name;
     }
     
-    private static string ObjectToIniSection(object obj, string? iniSectionName = null)
+    private static void WriteToIni(IniWriter iniWriter,object serializableObject, Section? section, Section? parentSection)
     {
-
-        var iniString = new StringBuilder();
-        var sectionName = GetSectionName(obj.GetType(),iniSectionName);
-
-
-        var fields = obj.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
-            .Where(e => e.GetCustomAttributes(typeof(IniPropertyAttribute)).Any());
-
-        if (fields.Any())
-        {
-            iniString.AppendLine($"[{sectionName}]");
-        }
+        var fields = serializableObject.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+           .Where(e => e.GetCustomAttributes(typeof(IniPropertyAttribute)).Any());
 
         foreach (var property in fields)
         {
             var iniPropertyAttribute = property.GetCustomAttribute<IniPropertyAttribute>();
             var propertyName = iniPropertyAttribute?.Name;
-            var propertyValue = property.GetValue(obj);
+            var propertyValue = property.GetValue(serializableObject);
             var propertyType = property.FieldType;
 
-            if (IsValidProperty(obj.GetType().Name, property.Name, propertyValue, iniPropertyAttribute) == false)
+            if (IsValidProperty(serializableObject.GetType().Name, property.Name, propertyValue, iniPropertyAttribute) == false)
             {
-                return "";
+                return;
             }
 
 
             if (propertyType.IsEnum)
             {
-                iniString.AppendLine(IniEnumField(propertyName, propertyValue));
+                section?.AddItem(propertyName, IniEnumField(propertyValue));
             }
             else if (IsFloatType(propertyType))
             {
-                iniString.AppendLine(IniDoubleField(property, propertyName, obj));
+                section?.AddItem(propertyName, IniDoubleField(property, serializableObject));
             }
             else if (IsDateTimeType(propertyType))
             {
-                iniString.AppendLine(IniDateTimeField(property, propertyName, obj));
+                section?.AddItem(propertyName, IniDateTimeField(property, serializableObject));
             }
             else if (IsSimpleType(propertyType))
             {
@@ -74,39 +74,52 @@ public class IniFile
                 {
                     continue;
                 }
-
-                iniString.AppendLine(IniField(propertyName, propertyValue?.ToString()));
+                section?.AddItem(propertyName, propertyValue?.ToString());
             }
             else if (IsEnumerable(propertyType))
             {
                 if (propertyValue != null)
                 {
-                    var index = 0;
-
-                    foreach (var item in (IEnumerable)propertyValue)
+                    var listIndexFormat = "0000";
+                    var listIndexFormatAttribute = property.GetCustomAttribute<ListIndexFormatAttribute>();
+                    if (listIndexFormatAttribute != null)
                     {
-                        index++;
+                        if (string.IsNullOrEmpty(listIndexFormatAttribute.DisplayFormat) == false)
+                            listIndexFormat = listIndexFormatAttribute.DisplayFormat;
+                    }
 
-                        var nestedSectionName = ($"{propertyName}{index:D4}");
-                        var nestedSection = ObjectToIniSection(item, nestedSectionName);
-
-                        iniString.AppendLine(nestedSection);
+                    foreach (var itemSerializableObject in (IEnumerable)propertyValue)
+                    {
+                        var newSection = iniWriter.CreateListItemSection(propertyName,listIndexFormat, parentSection);
+                        WriteToIni(iniWriter,itemSerializableObject, newSection, newSection);
                     }
                 }
             }
             else
             {
-                var nestedSectionName = ($"{propertyName}");
-                var nestedSection = ObjectToIniSection(propertyValue, nestedSectionName);
-                iniString.AppendLine(nestedSection);
+                var newSection = iniWriter.CreateSection(propertyName);
+                 WriteToIni(iniWriter,propertyValue,newSection, parentSection);
             }
 
         }
-
-        return iniString.ToString().TrimEnd();
     }
 
-    private static string IniDateTimeField(FieldInfo property, string propertyName, object? obj)
+    private static bool ContainsSimpleType(IEnumerable<FieldInfo> fields)
+    {
+        var existsSimpleTypes = fields.Where(e => e.FieldType.IsEnum ||
+
+          IsFloatType(e.FieldType) ||
+
+          IsDateTimeType(e.FieldType) ||
+
+          IsSimpleType(e.FieldType)
+
+       );
+
+        return existsSimpleTypes.Count() > 0;
+    }
+
+    private static string IniDateTimeField(FieldInfo property, object? obj)
     {
         var valueStr = "";
         var propertyValue = property.GetValue(obj);
@@ -121,8 +134,7 @@ public class IniFile
             if (formatAttribute == null)
                 formatAttribute = property.GetCustomAttribute<FormatDateAndTimeAttribute>();
 
-           
-
+          
             if (formatAttribute != null)
             {
                 valueStr = string.Format(formatAttribute.DataFormatString, propertyValue);
@@ -133,7 +145,7 @@ public class IniFile
             }
         }
 
-        return IniField(propertyName,valueStr);
+        return valueStr;
     }
 
     private static string IniField(string propertyName, string propertyValue)
@@ -141,7 +153,7 @@ public class IniFile
         return $"{propertyName}={propertyValue}";
     }
 
-    private static string IniDoubleField(FieldInfo property, string propertyName, object obj)
+    private static string IniDoubleField(FieldInfo property, object obj)
     {
         var valueStr = "0";
         var propertyValue = property.GetValue(obj);
@@ -158,13 +170,13 @@ public class IniFile
                 valueStr = ((double)propertyValue).ToString("0:N2", CultureInfo.CreateSpecificCulture("en-US"));
             }
         }
-        return IniField(propertyName, valueStr);
+        return valueStr;
     }
 
 
-    private static string IniEnumField(string propertyName, object? value)
+    private static string IniEnumField(object? value)
     {
-        return IniField(propertyName, value != null ? ((int)value).ToString() : "0");
+        return value != null ? ((int)value).ToString() : "0";
     }
     
 
@@ -207,14 +219,6 @@ public class IniFile
     
     public class IniFileSerializer<T> where T : class
     {
-        public IniFileSerializer()
-        {
-            if (!typeof(T).GetCustomAttributes(typeof(IniSectionAttribute), inherit: false).Any())
-            {
-                throw new InvalidOperationException($"A classe {typeof(T).Name} deve ter o atributo IniSection.");
-            }
-        }
-
         public string ToIniFile()
         {
             return ObjectToIni(this);

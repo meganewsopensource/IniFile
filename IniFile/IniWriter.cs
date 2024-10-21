@@ -1,21 +1,46 @@
+using System.Collections.Immutable;
 using System.Text;
 
 namespace IniFile;
 
 
-public class Section(string name, string singleName, int index,  string? parentSection = null, string? indexFormat = "000")
+public class Section
 {
-    public int Index = index;
-    private readonly Dictionary<string,string> _keyValues = new();
-    public string Name = name;
-    public string? ParentSection = parentSection;
-    public string? IndexFormat = indexFormat;
-    public string SingleName = singleName;
+    public int Index;
+    public readonly Section? ParentSection;
+    public readonly string? IndexFormat;
+    public string SingleName;
 
+    private readonly Dictionary<string, string> _keyValues = new();
+    private readonly bool IsItemList;
+
+
+    public Section(string singleName)
+    {
+        Index = 1;
+        IsItemList = false;
+        ParentSection = null;
+        IndexFormat = "";
+        SingleName = singleName;
+    }
+    public Section(string singleName, bool isItemList, int listIndex, string? listIndexFormat, Section? parentSection)
+    {
+        SingleName = singleName;
+        IsItemList = isItemList;
+        ParentSection = parentSection;
+        IndexFormat = listIndexFormat;
+        SingleName = singleName;
+        Index = listIndex;
+    }
     
     public void AddItem(string key, string value)
     {
          _keyValues[key] = value;
+    }
+
+    public IImmutableList<KeyValuePair<string,string>> GetItems()
+    {
+        return _keyValues.ToImmutableList();
     }
 
     public string? GetItem(string key)
@@ -23,22 +48,45 @@ public class Section(string name, string singleName, int index,  string? parentS
         return _keyValues.GetValueOrDefault(key);
     }
 
-    
-    public override string ToString()
+    public string FullUniqueName {
+        get  {
+
+            if (IsItemList)
+            {
+                var uniqueName = $"{SingleName}{ParentIndex}" + Index.ToString(IndexFormat);
+
+                return uniqueName;
+            }
+            else return SingleName;
+
+        } }
+
+    public string ParentIndex
     {
-          if (_keyValues.Count != 0)
-          {
-              var builder = new StringBuilder();
-              builder.AppendLine($"[{Name}]");
-              
-              foreach (var item in _keyValues )
-              {
-                   builder.AppendLine($"{item.Key}={item.Value}");
-              }
-              return builder.ToString().TrimEnd();
-          }
-          return "";
-    } 
+        get
+        {
+            if (ParentSection != null)
+            {
+                var name = RemoveSingleName(ParentSection.FullUniqueName,ParentSection.SingleName);
+                return name;
+
+            }
+            else return "";
+        }
+    }
+    private string RemoveSingleName(string fullName, string singleName)
+    {
+        int indice = fullName.IndexOf(singleName);
+
+        if (indice >= 0)
+        {
+            return fullName.Remove(indice, singleName.Length);
+        }
+
+        return fullName;
+    }
+
+   
 }
 
 
@@ -47,47 +95,36 @@ public class Section(string name, string singleName, int index,  string? parentS
 
 public class IniWriter
 {
-    List<Section> _sections = new();
+    private List<Section> _sections = new();
+
+    public bool WriteParentSectionsInComment { get; set; } = false;
+    public bool ShowEmptySections { get; set; } = false;
 
 
-    public Section? WriteSection(string sectionName, bool isList, string? parentSectionName, string indexFormat = "000")
+    public Section? CreateListItemSection(string singleName,string listIndexFormat, Section? parentSection = null)
     {
-        Section? newSection = _sections.FirstOrDefault(e => e.Name == sectionName);
+        return CreateSection(singleName, true, parentSection, listIndexFormat);
+    }
+
+    public Section? CreateSection(string sectionName)
+    {
+        return CreateSection(sectionName, false, null,"");
+    }
+
+    private Section? CreateSection(string singleName, bool isListItem, Section? parentSection, string listIndexFormat)
+    {
+        Section? newSection = _sections.FirstOrDefault(e => e.FullUniqueName == singleName);
         
-        if (newSection == null) //Não existe
+        if (newSection == null) 
         {
-            var newName = sectionName;
-
             var index = 1;
-            if (parentSectionName != null)
-            {
-                var parentSection = _sections.FirstOrDefault(e => e.Name == parentSectionName);
-                if (parentSection != null)
-                {
-                    //Procura todos 
-                    var outros = _sections.Where(e => e.SingleName == sectionName && e.ParentSection == parentSection.Name);
 
-                    var qtd = outros.Count();
-                    index = qtd + 1;
-                    newName = sectionName + parentSection.Index.ToString(indexFormat)  + index.ToString(indexFormat);
-                    newSection = new Section(newName, sectionName,index, parentSectionName);
-                }
-                else throw new Exception($"Parent section {parentSection} not found");
-            }
-            else
-            {
-                if (isList)
-                {
-                    var qtd = _sections.Count(e => e.SingleName == sectionName);
-                    index = qtd + 1;
-                    newName = sectionName + index.ToString(indexFormat);
-                }
-                
-                newSection = new Section(newName, sectionName,index, parentSectionName);
-            }
+            if (parentSection != null)
+                index = _sections.Count(e => e.SingleName == singleName && e.ParentSection == parentSection) + 1;
+            else if (isListItem)
+                index = _sections.Count(e => e.SingleName == singleName) + 1;
 
-          
-            
+            newSection = new Section(singleName, isListItem, index, listIndexFormat, parentSection);
             _sections.Add(newSection);
         }
         
@@ -95,25 +132,34 @@ public class IniWriter
     }
 
    
-   
-    
-    public void Write(Section? section, string key, string value)
-    {
-        if (section == null)
-        {
-            throw new Exception($"Section is null");
-        }
-        section?.AddItem(key, value);
-    }
-
+ 
 
     public override string ToString()
     {
+
         var builder = new StringBuilder();
 
         foreach (var section in _sections)
         {
-            builder.AppendLine(section.ToString());
+            var items = section.GetItems();
+           
+            if (items.Count > 0 || (items.Count == 0 && ShowEmptySections))
+            {
+                var comment = "";
+                if (section.ParentSection != null && WriteParentSectionsInComment)
+                {
+                    comment = $" #item {section.Index} de {section.ParentSection.FullUniqueName}";
+                }
+
+                builder.AppendLine($"[{section.FullUniqueName}]{comment}");
+            }
+
+            foreach (var item in items)
+            {
+                builder.AppendLine($"{item.Key}={item.Value}");
+            }
+
+            builder.AppendLine();
         }
 
         return builder.ToString().TrimEnd();

@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+
 namespace IniFile;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
@@ -14,3 +16,10 @@ public class IniSectionAttribute(string name) : Attribute
 {
     internal string Name { get; } = name;
 }
+
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Class)]
+public class ListIndexFormatAttribute(string displayFormat) : Attribute
+{
+    internal string DisplayFormat { get; } = displayFormat;
+}
+

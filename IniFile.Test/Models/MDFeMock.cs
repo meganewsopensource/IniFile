@@ -1,56 +1,54 @@
+using System.Collections.Immutable;
+using static IniFile.IniFile;
+
 namespace IniFile.Test.Models;
 
-[IniSection("ide")]
-public class MDFeMock
+
+public class MDFeMock : IniFileSerializer<MDFeMock>
 {
-    [IniProperty("cUF")]
-    public int UF { get; set; }
-    [IniProperty("tpAmb")]
-    public int Ambiente { get; set; }
-    [IniProperty("tpEmit")]
-    public int TipoEmitente { get; set; }
-    [IniProperty("mod")]
-    public string Modelo { get; set; }
-    [IniProperty("serie")]
-    public string Serie { get; set; }
+    [IniProperty("ide")]
+    private Ide Ide;
+
+    [IniProperty("emit")]
+    private Emitente Emitente;
 
     [IniProperty("perc")]
-    public IEnumerable<Percurso> Percursos { get; set; }
+    [ListIndexFormat("000")]
+    private IEnumerable<Percurso> Percursos;
 
-    
-    [IniProperty("emit")]
-    public Emitente Emitente { get; set; }
-    
+    [IniProperty("DESC")]
+    [ListIndexFormat("000")]
+    private IEnumerable<Descarga> Desc;
+
     public MDFeMock()
     {
-        UF = 35;
-        Ambiente = 1;
-        TipoEmitente = 1;
-        Modelo = "58";
-        Serie = "1";
+        Ide = new Ide(35, 1, 1, "58", "1");
 
-        Percursos = new List<Percurso>()
-        {
-            new()
-            {
-                UF = "BA",
-            },
-            new()
-            {
-                UF = "MG",
-            }
-        };
+        Emitente = new Emitente("12345678", "123", "Nome", "nome fantasia", "Rua das flores", "12", "");
 
-        Emitente = new Emitente()
-        {
-            Complemento = "Casa",
-            Fantasia = "Nome Fantasia",
-            Logradouro = "Rua das flores",
-            Nome = "Caps",
-            Numero = "12345678",
-            IE = "123",
-            CNPJCPF = "12345678"
-        };
+        Percursos =
+        [
+            new("BA"),
+            new("MG"),
+        ];
+
+        Desc =
+        [
+            new(
+                3518701,
+               "GURARUJA", 
+                [
+                     new InformacaoCte("98374949404949","errer","45655", [
+                        new Peri("kuy","test","ab00e"),
+                        new Peri("yml","test2","bibiou"),
+                     ]),
+                     new InformacaoCte("036848746484847","irurr","9789", [
+                         new Peri("kuy","test","ab00e"),
+                     ]),
+                     
+                ]
+            )
+        ];
     }
 
     public override string ToString()
@@ -60,35 +58,84 @@ public class MDFeMock
 }
 
 
-
-public class Percurso
+public class Descarga(int codigoMuniciopioDescarga, string municipioDescarga, IEnumerable<InformacaoCte> infoCte)
 {
-    [IniProperty("UFPer")]
-    public string UF { get; set; }
+    [IniProperty("cMunDescarga")]
+    private int CodigoMuniciopioDescarga = codigoMuniciopioDescarga;
+    [IniProperty("xMunDescarga")]
+    private string MunicipioDescarga = municipioDescarga;
+
+    [IniProperty("infCTe")]
+    [ListIndexFormat("000")]
+    private IEnumerable<InformacaoCte> InformacoesCte = infoCte;
 }
 
-public class Emitente
+public class InformacaoCte(string chaveCte, string segCodBarra, string indReentrega, IEnumerable<Peri> peri)
+{
+    [IniProperty("chCTe")]
+    private string ChaveCte = chaveCte;
+    [IniProperty("SegCodBarra")]
+    private string SegCodBarra = segCodBarra;
+
+    [IniProperty("indReentrega")]
+    private string IndReentrega = indReentrega;
+
+    [IniProperty("peri")]
+    [ListIndexFormat("000")]
+    private IEnumerable<Peri> Peris = peri;
+}
+public class Peri(string oNU, string nome, string classificacaoRiscao)
+{
+    [IniProperty("nONU")]
+    private string ONU = oNU;
+
+    [IniProperty("xNomeAE")]
+    private string Nome = nome;
+
+
+    [IniProperty("xClaRisco")]
+    private string ClassificacaoRiscao = classificacaoRiscao;
+}
+
+
+public class Ide(int uF, int ambiente, int tipoEmitente, string modelo, string serie)
+{
+    [IniProperty("cUF")]
+    private int UF = uF;
+    [IniProperty("tpAmb")]
+    private int Ambiente = ambiente;
+    [IniProperty("tpEmit")]
+    private int TipoEmitente = tipoEmitente;
+    [IniProperty("mod")]
+    private string Modelo = modelo;
+    [IniProperty("serie")]
+    private string Serie = serie;
+}
+
+
+public class Percurso(string uF)
+{
+    [IniProperty("UFPer")]
+    private string UF = uF;
+}
+
+public class Emitente(string cNPJCPF, string iE, string nome, string fantasia, string logradouro, string numero, string complemento)
 {
     [IniProperty("CNPJCPF")]
-    public string CNPJCPF { get; set; }
+    private string CNPJCPF = cNPJCPF;
     [IniProperty("IE")]
-    public string IE { get; set; }
+    private string IE = iE;
     [IniProperty("xNome")]
-    public string Nome { get; set; }
+    private string Nome = nome;
     [IniProperty("xFant")]
-    public string Fantasia { get; set; }
-    
-    [IniProperty("xLgr")]
-    public string Logradouro { get; set; }
-    
-    [IniProperty("nro")]
-    public string Numero { get; set; }
-    
-    [IniProperty("xCpl")]
-    public string Complemento { get; set; }
-  
-    
+    private string Fantasia = fantasia;
 
-    
-    
+    [IniProperty("xLgr")]
+    private string Logradouro = logradouro;
+
+    [IniProperty("nro")]
+    private string Numero = numero;
+
+    [IniProperty("xCpl")]
+    private string Complemento = complemento;
 }

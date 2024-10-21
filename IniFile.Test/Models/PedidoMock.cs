@@ -7,22 +7,22 @@ internal class PedidoMock : IniFile.IniFileSerializer<PedidoMock>
 { 
  
     
-    //[IniProperty("data")]
+    [IniProperty("data")]
     private DateTime? data;
     
-   // [IniProperty("hora")]
+   [IniProperty("hora")]
     private DateTime? hora;
 
- //   [IniProperty("status")] 
+    [IniProperty("status")] 
     private StatusPedido status;
     
- //   [IniProperty("cliente")]
+    [IniProperty("cliente")]
     private ClienteMock clienteMock;
     
- //   [IniProperty("produto")]
+    [IniProperty("produto")]
     private ProdutoMock produto;
     
-  //  [IniProperty("itemPedido")]
+    [IniProperty("itemPedido")]
     private IImmutableList<ItemPedidoMock> itens;
     
     [IniProperty("pagamento")]
@@ -163,54 +163,3 @@ internal class Parcela(int parcela, double valor, DateTime vencimento)
     private DateTime vencimento = vencimento;
 }
 
-[IniSection("Teste")]
-internal class SingleMock : IniFile.IniFileSerializer<SingleMock>
-{
-    [IniProperty("valString")]
-    private string valorString;
-
-    [IniProperty("valInteiro")]
-    private int valorInteiro;
-
-    [IniProperty("valDouble_duas_casas")]
-    [FormatNumeric(2)]
-    private double valorDouble;
-
-    [IniProperty("valDouble_tres_casas")]
-    [FormatNumeric(3)]
-    private double valorDouble3Casas;
-
-
-    [IniProperty("valDataSemAtributoDeFormatacao")]
-    private DateTime somenteDataSemAtributoFormatacao;
-
-    [IniProperty("valSomenteDataComAtributo")]
-    [FormatDate]
-    private DateTime somenteDataComAtributoFormatacao;
-
-    [IniProperty("valDataHoraComAtributo")]
-    [FormatDateAndTime]
-    private DateTime dataEHora;
-
-    [IniProperty("valSomenteHoraComAtributo")]
-    [FormatTime]
-    private DateTime somenteHoraComAtributoFormatacao;
-
-    [IniProperty("valEnum")]
-    private StatusPedido statusPedido;
-
-    public SingleMock(string valorString, int valorInteiro, double valorDouble, double valorDouble3Casas, DateTime somenteDataSemAtributoFormatacao, DateTime somenteDataComAtributoFormatacao, DateTime dataEHora, DateTime somenteHoraComAtributoFormatacao, StatusPedido statusPedido)
-    {
-        this.valorString = valorString;
-        this.valorInteiro = valorInteiro;
-        this.valorDouble = valorDouble;
-        this.valorDouble3Casas = valorDouble3Casas;
-        this.somenteDataSemAtributoFormatacao = somenteDataSemAtributoFormatacao;
-        this.somenteDataComAtributoFormatacao = somenteDataComAtributoFormatacao;
-        this.dataEHora = dataEHora;
-        this.somenteHoraComAtributoFormatacao = somenteHoraComAtributoFormatacao;
-        this.statusPedido = statusPedido;
-    }
-
-  
-}
