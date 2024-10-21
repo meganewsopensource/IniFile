@@ -20,6 +20,10 @@ public class IniSectionAttribute(string name) : Attribute
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Class)]
 public class ListIndexFormatAttribute(string displayFormat) : Attribute
 {
+    public const string DefaultDisplayFormat = "000";
+    
     internal string DisplayFormat { get; } = displayFormat;
+
+   
 }
 

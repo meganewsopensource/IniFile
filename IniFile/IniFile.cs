@@ -80,12 +80,12 @@ public class IniFile
             {
                 if (propertyValue != null)
                 {
-                    var listIndexFormat = "0000";
+                    var listIndexFormat = ListIndexFormatAttribute.DefaultDisplayFormat;
                     var listIndexFormatAttribute = property.GetCustomAttribute<ListIndexFormatAttribute>();
-                    if (listIndexFormatAttribute != null)
+                    
+                    if (listIndexFormatAttribute != null && string.IsNullOrEmpty(listIndexFormatAttribute.DisplayFormat) == false)
                     {
-                        if (string.IsNullOrEmpty(listIndexFormatAttribute.DisplayFormat) == false)
-                            listIndexFormat = listIndexFormatAttribute.DisplayFormat;
+                        listIndexFormat = listIndexFormatAttribute.DisplayFormat;
                     }
 
                     foreach (var itemSerializableObject in (IEnumerable)propertyValue)
