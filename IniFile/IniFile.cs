@@ -7,10 +7,11 @@ namespace IniFile;
 
 public class IniFile
 {
-    public static string ObjectToIni(object serializableObject)
+    public static string ObjectToIni(object serializableObject, IIniWriter? iniWriter = null)
     {
-        IniWriter iniWriter = new();
-
+        iniWriter ??= new IniWriter();
+         
+        
         var fields = serializableObject.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
           .Where(e => e.GetCustomAttributes(typeof(IniPropertyAttribute)).Any());
 
@@ -37,7 +38,7 @@ public class IniFile
         return sessionAttribute != null ? sessionAttribute.Name : objectType.Name;
     }
     
-    private static void WriteToIni(IniWriter iniWriter,object serializableObject, Section? section, Section? parentSection)
+    private static void WriteToIni(IIniWriter iniWriter,object serializableObject, Section? section, Section? parentSection)
     {
         var fields = serializableObject.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
            .Where(e => e.GetCustomAttributes(typeof(IniPropertyAttribute)).Any());
@@ -54,7 +55,7 @@ public class IniFile
                 return;
             }
 
-            if (propertyType.IsEnum)
+            if (IsEnumType(propertyType))
             {
                 section?.AddItem(propertyName, IniEnumField(propertyValue));
             }
@@ -66,6 +67,10 @@ public class IniFile
             {
                 section?.AddItem(propertyName, IniDateTimeField(property, serializableObject, iniPropertyAttribute?.DefaulValue));
             }
+            else if (IsBoolType(propertyType))
+            {
+                section?.AddItem(propertyName, IniBoolField(property, serializableObject, iniPropertyAttribute?.DefaulValue));
+            }
             else if (IsSimpleType(propertyType))
             {
                 section?.AddItem(propertyName, propertyValue?.ToString());
@@ -74,14 +79,9 @@ public class IniFile
             {
                 if (propertyValue != null)
                 {
-                    var listIndexFormat = ListIndexFormatAttribute.DefaultDisplayFormat;
                     var listIndexFormatAttribute = property.GetCustomAttribute<ListIndexFormatAttribute>();
-                    
-                    if (listIndexFormatAttribute != null && string.IsNullOrEmpty(listIndexFormatAttribute.DisplayFormat) == false)
-                    {
-                        listIndexFormat = listIndexFormatAttribute.DisplayFormat;
-                    }
-
+                    var listIndexFormat = listIndexFormatAttribute != null && !string.IsNullOrEmpty(listIndexFormatAttribute.DisplayFormat) ? listIndexFormatAttribute.DisplayFormat : ListIndexFormatAttribute.DefaultDisplayFormat;
+                  
                     foreach (var itemSerializableObject in (IEnumerable)propertyValue)
                     {
                         var newSection = iniWriter.CreateListItemSection(propertyName,listIndexFormat, parentSection);
@@ -89,27 +89,23 @@ public class IniFile
                     }
                 }
             }
-            else
+            else if (IsClass(propertyType))
             {
                 var newSection = iniWriter.CreateSection(propertyName);
-                 WriteToIni(iniWriter,propertyValue,newSection, parentSection);
+                WriteToIni(iniWriter,propertyValue,newSection, parentSection);
             }
-
+            else
+            {
+                throw new NotImplementedException("Property " + property.Name + " is not implemented");
+            }
         }
     }
 
+ 
     private static bool ContainsSimpleType(IEnumerable<FieldInfo> fields)
     {
-        var existsSimpleTypes = fields.Where(e => e.FieldType.IsEnum ||
-
-          IsFloatType(e.FieldType) ||
-
-          IsDateTimeType(e.FieldType) ||
-
-          IsSimpleType(e.FieldType)
-
-       );
-
+        var existsSimpleTypes = fields.Where(e => !IsEnumerable(e.FieldType) && !IsClass(e.FieldType));
+   
         return existsSimpleTypes.Count() > 0;
     }
 
@@ -142,10 +138,17 @@ public class IniFile
         return valueStr;
     }
 
-    private static string IniField(string propertyName, string propertyValue)
+    private static string IniBoolField(FieldInfo property, object? obj, object? defaultValue)
     {
-        return $"{propertyName}={propertyValue}";
+        var propertyValue = property.GetValue(obj) ?? defaultValue;
+        if (propertyValue != null)
+        {
+            return ((bool)propertyValue).ToString();
+        }
+
+        return "";
     }
+    
 
     private static string IniDoubleField(FieldInfo property, object obj, object? defaultValue)
     {
@@ -194,6 +197,11 @@ public class IniFile
                 type == typeof(float) || type == typeof(float?);
     }
 
+    private static bool IsEnumType(Type type)
+    {
+        return (Nullable.GetUnderlyingType(type) ?? type).IsEnum;
+    }
+
     private static bool IsDateTimeType(Type type)
     {
         return type == typeof(DateTime) || type == typeof(DateTime?);
@@ -203,44 +211,69 @@ public class IniFile
     {
         return type.IsPrimitive || 
                type.IsEnum ||    
-               type == typeof(string) ||
+               type == typeof(string)  || 
                type == typeof(decimal) || type == typeof(decimal?) ||
                type == typeof(DateTime) || type == typeof(DateTime?) ||
-               type == typeof(int) || type == typeof(int?) ||
+               IsIntegerType(type) ||
+               type == typeof(bool) || type == typeof(bool?) ||
                type == typeof(Guid) ||  type == typeof(Guid?); 
+        
+    }
+    
+    private static bool IsIntegerType(Type type)
+    {
+        Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+
+        return underlyingType == typeof(byte) || underlyingType == typeof(sbyte) ||
+               underlyingType == typeof(short) || underlyingType == typeof(ushort) ||
+               underlyingType == typeof(int) || underlyingType == typeof(uint) ||
+               underlyingType == typeof(long) || underlyingType == typeof(ulong);
     }
 
     private static bool IsEnumerable(Type type)
     {
         return typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string);
     }
-    
-    public class IniFileSerializer<T> where T : class
+
+    private static bool IsClass(Type type)
     {
-        public string ToIniFile()
-        {
-            return ObjectToIni(this);
-        }
+        return type.IsClass && type != typeof(string);
+    }
 
-        public void SaveToIniFile(string filePath)
-        {
-
-            if (File.Exists(filePath))
-                File.Delete(filePath);
-            else
-            {
-                var directory = Path.GetDirectoryName(filePath);
-                if (directory != null)
-                  Directory.CreateDirectory(directory);
-            }
-
-            File.WriteAllText(filePath, ToIniFile());
-        }
-
-        public override string ToString()
-        {
-            return ToIniFile();
-        }
+    private static bool IsBoolType(Type type)
+    {
+        return type == typeof(bool) || type == typeof(bool?);
     }
     
+   
+    
+}
+
+public class IniFileSerializer
+{
+    public string ToIniFile(IIniWriter? writer = null)
+    {
+        return IniFile.ObjectToIni(this,writer);
+    }
+
+    public void SaveToIniFile(string filePath)
+    {
+
+        if (File.Exists(filePath))
+            File.Delete(filePath);
+        else
+        {
+            var directory = Path.GetDirectoryName(filePath);
+            if (directory != null)
+                Directory.CreateDirectory(directory);
+        }
+
+        File.WriteAllText(filePath, ToIniFile());
+    }
+        
+        
+    public override string ToString()
+    {
+        return ToIniFile();
+    }
 }

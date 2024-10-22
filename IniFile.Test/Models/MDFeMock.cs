@@ -1,10 +1,8 @@
-using System.Collections.Immutable;
-using static IniFile.IniFile;
 
 namespace IniFile.Test.Models;
 
 
-public class MDFeMock : IniFileSerializer<MDFeMock>
+public class MDFeMock : IniFileSerializer
 {
     [IniProperty("ide")]
     private Ide Ide;

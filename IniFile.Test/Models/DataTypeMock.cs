@@ -1,7 +1,7 @@
 namespace IniFile.Test.Models;
 
 [IniSection("Teste")]
-internal class DataTypeMock : IniFile.IniFileSerializer<DataTypeMock>
+internal class DataTypeMock : IniFileSerializer
 {
     [IniProperty("valString")]
     private string valorString;
@@ -52,8 +52,9 @@ internal class DataTypeMock : IniFile.IniFileSerializer<DataTypeMock>
   
 }
 
+
 [IniSection("RequiredTests")]
-internal class RequiredFieldsMock : IniFile.IniFileSerializer<RequiredFieldsMock>
+internal class RequiredFieldsMock : IniFileSerializer
 {
 
     [IniProperty("NullableString")]
@@ -69,14 +70,17 @@ internal class RequiredFieldsMock : IniFile.IniFileSerializer<RequiredFieldsMock
 internal enum TesteEnum {enum1, enum2};
 
 [IniSection("DefaultValueTests")]
-internal class DefaultValueMock : IniFile.IniFileSerializer<DefaultValueMock>
+internal class DefaultValueMock : IniFileSerializer
 {
 
     [IniProperty("StringValue","string")]
     internal string? StringValue;
 
-    [IniProperty("IntValue", 5)]
+    [IniProperty("IntValue", int.MaxValue)]
     internal int? IntValue;
+    
+    [IniProperty("LongValue", long.MaxValue)]
+    internal long? LongValue;
 
     [IniProperty("DoubleValue", 12.34)]
     internal double? DoubleValue;
@@ -87,11 +91,10 @@ internal class DefaultValueMock : IniFile.IniFileSerializer<DefaultValueMock>
     [IniProperty("DecimalValue", 12.34)]
     internal decimal? DecimalValue;
 
-    [IniProperty("BooleanValue", true)]
+    [IniProperty("BooleanValue", false)]
     internal bool? BooleanValue;
 
-    //[IniProperty("EnumValue", TesteEnum.enum2)]
-    //internal TesteEnum? EnumValue;
+    [IniProperty("EnumValue", TesteEnum.enum2)]
+    internal TesteEnum? EnumValue;
 
-    
 }

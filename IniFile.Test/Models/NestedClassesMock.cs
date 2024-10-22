@@ -3,7 +3,7 @@ namespace IniFile.Test.Models;
 public class NestedClassesMock
 {
     [IniSection("Section1")]
-    public class ClassMock : IniFile.IniFileSerializer<ClassMock>
+    public class ClassMock : IniFileSerializer
     {
         [IniProperty("Prop")]
         private string Property;

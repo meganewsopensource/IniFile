@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 namespace IniFile.Test.Models;
 
 [IniSection("Pedido")]
-internal class PedidoMock : IniFile.IniFileSerializer<PedidoMock>
+internal class PedidoMock : IniFileSerializer
 { 
  
     

@@ -6,7 +6,7 @@ public class IniWriterTest
     [Fact]
     public void TestIniWriter()
     {
-        var iniWriter = new IniWriter();
+        IIniWriter iniWriter = new IniWriter();
 
         var listIndexFormat = "000";
 
@@ -99,10 +99,8 @@ valorPriInterno=Valor";
     [Fact]
     public void TestIniWriterWithParentSectionComment()
     {
-        var iniWriter = new IniWriter
-        {
-            WriteParentSectionsInComment = true
-        };
+        IIniWriter iniWriter = new IniWriter();
+        iniWriter.WriteParentSectionsInComment(true);
 
         var listIndexFormat = "000";
 
@@ -151,11 +149,9 @@ property1=value1";
     [Fact]
     public void IniWriterShowEmptySectionsTrueTest()
     {
-        var iniWriter = new IniWriter
-        {
-            ShowEmptySections = true
-        };
-        
+        IIniWriter iniWriter = new IniWriter();
+        iniWriter.ShowEmptySections(true);
+
         iniWriter.CreateSection("Section1");
         var iniContent = iniWriter.ToString();
         var expectedIniContent = "[Section1]";
@@ -170,19 +166,14 @@ property1=value1";
     [Fact]
     public void IniWriterShowEmptySectionsFalseTest()
     {
-        var iniWriter = new IniWriter
-        {
-            ShowEmptySections = false
-        };
-        
+        IIniWriter iniWriter = new IniWriter();
+        iniWriter.ShowEmptySections(false);
+
         iniWriter.CreateSection("Section1");
         var iniContent = iniWriter.ToString();
         var expectedIniContent = "";
        
         Assert.Equal(iniContent, expectedIniContent);
-        
-        
-        File.WriteAllText("C:\\v2\\IniWriterShowEmptySectionsTest.ini",iniWriter.ToString());
 
     }
 }

@@ -123,8 +123,17 @@ valEnum=500";
 
         var iniContent = defaultValues.ToString();
 
-
-
+        var expectedIniContent = @"[DefaultValueTests]
+StringValue=string
+IntValue=2147483647
+LongValue=9223372036854775807
+DoubleValue=12.34
+FloatValue=12.34
+DecimalValue=12.34
+BooleanValue=False
+EnumValue=1";
+        
+        Assert.Equal(expectedIniContent, iniContent);
     }
 
 

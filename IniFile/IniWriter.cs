@@ -93,17 +93,36 @@ public class Section
 
 
 
-public class IniWriter
+public class IniWriter : IIniWriter
 {
     private List<Section> _sections = new();
 
-    public bool WriteParentSectionsInComment { get; set; } = false;
-    public bool ShowEmptySections { get; set; } = false;
+    private bool _writeParentSectionsInComment = false;
+    private bool _showEmptySections = false;
 
 
+    public void WriteParentSectionsInComment(bool write)
+    {
+        _writeParentSectionsInComment = write;
+    }
+
+    public void ShowEmptySections(bool show)
+    {
+        _showEmptySections = show;
+    }
+    
     public Section? CreateListItemSection(string singleName,string listIndexFormat, Section? parentSection = null)
     {
         return CreateSection(singleName, true, parentSection, listIndexFormat);
+    }
+
+    public void AddItem(Section section, string key, string value)
+    {
+        if (_sections.Contains(section))
+        {
+            _sections.FirstOrDefault(e => e == section)?.AddItem(key,value);
+        }
+        else throw new KeyNotFoundException("Seção não encontrada");
     }
 
     public Section? CreateSection(string sectionName)
@@ -143,10 +162,10 @@ public class IniWriter
         {
             var items = section.GetItems();
            
-            if (items.Count > 0 || (items.Count == 0 && ShowEmptySections))
+            if (items.Count > 0 || (items.Count == 0 && _showEmptySections))
             {
                 var comment = "";
-                if (section.ParentSection != null && WriteParentSectionsInComment)
+                if (section.ParentSection != null && _writeParentSectionsInComment)
                 {
                     comment = $" #item {section.Index} de {section.ParentSection.FullUniqueName}";
                 }
@@ -165,5 +184,17 @@ public class IniWriter
         return builder.ToString().TrimEnd();
     }
 
+    public void SaveToFile(string filePath)
+    {
+        if (File.Exists(filePath))
+            File.Delete(filePath);
+        else
+        {
+            var directory = Path.GetDirectoryName(filePath);
+            if (directory != null)
+                Directory.CreateDirectory(directory);
+        }
 
+        File.WriteAllText(filePath, ToString());
+    }
 }
