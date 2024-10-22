@@ -3,11 +3,11 @@ using System.Xml.Linq;
 namespace IniFile;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public class IniPropertyAttribute(string name, string @default = "", bool required = true) : Attribute
+public class IniPropertyAttribute(string name, object? defaultValue = null, bool required = true) : Attribute
 {
     internal string Name { get; } = name;
     internal bool Required { get; } = required;
-    internal string Default { get; } = @default;
+    internal object DefaulValue { get; } = defaultValue;
 }
     
 

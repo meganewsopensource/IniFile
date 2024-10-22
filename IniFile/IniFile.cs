@@ -28,8 +28,7 @@ public class IniFile
 
         WriteToIni(iniWriter,serializableObject, section, null);
 
-        var content = iniWriter.ToString();
-        return content;
+        return iniWriter.ToString();
     }
 
     private static string GetSectionNameFromSectionAttribute(Type objectType)
@@ -47,7 +46,7 @@ public class IniFile
         {
             var iniPropertyAttribute = property.GetCustomAttribute<IniPropertyAttribute>();
             var propertyName = iniPropertyAttribute?.Name;
-            var propertyValue = property.GetValue(serializableObject);
+            var propertyValue = property.GetValue(serializableObject) ?? iniPropertyAttribute?.DefaulValue;
             var propertyType = property.FieldType;
 
             if (IsValidProperty(serializableObject.GetType().Name, property.Name, propertyValue, iniPropertyAttribute) == false)
@@ -55,25 +54,20 @@ public class IniFile
                 return;
             }
 
-
             if (propertyType.IsEnum)
             {
                 section?.AddItem(propertyName, IniEnumField(propertyValue));
             }
             else if (IsFloatType(propertyType))
             {
-                section?.AddItem(propertyName, IniDoubleField(property, serializableObject));
+                section?.AddItem(propertyName, IniDoubleField(property, serializableObject, iniPropertyAttribute?.DefaulValue));
             }
             else if (IsDateTimeType(propertyType))
             {
-                section?.AddItem(propertyName, IniDateTimeField(property, serializableObject));
+                section?.AddItem(propertyName, IniDateTimeField(property, serializableObject, iniPropertyAttribute?.DefaulValue));
             }
             else if (IsSimpleType(propertyType))
             {
-                if (!iniPropertyAttribute.Required && propertyValue!.ToString()! == iniPropertyAttribute.Default)
-                {
-                    continue;
-                }
                 section?.AddItem(propertyName, propertyValue?.ToString());
             }
             else if (IsEnumerable(propertyType))
@@ -119,10 +113,10 @@ public class IniFile
         return existsSimpleTypes.Count() > 0;
     }
 
-    private static string IniDateTimeField(FieldInfo property, object? obj)
+    private static string IniDateTimeField(FieldInfo property, object? obj, object? defaultValue)
     {
         var valueStr = "";
-        var propertyValue = property.GetValue(obj);
+        var propertyValue = property.GetValue(obj) ?? defaultValue;
 
         if (propertyValue != null)
         {
@@ -153,10 +147,11 @@ public class IniFile
         return $"{propertyName}={propertyValue}";
     }
 
-    private static string IniDoubleField(FieldInfo property, object obj)
+    private static string IniDoubleField(FieldInfo property, object obj, object? defaultValue)
     {
         var valueStr = "0";
-        var propertyValue = property.GetValue(obj);
+
+        var propertyValue = property.GetValue(obj) ?? defaultValue;
 
         if (propertyValue != null)
         {
@@ -167,7 +162,7 @@ public class IniFile
             }
             else
             {
-                valueStr = ((double)propertyValue).ToString("0:N2", CultureInfo.CreateSpecificCulture("en-US"));
+                valueStr = ((double)propertyValue).ToString("N2", CultureInfo.CreateSpecificCulture("en-US"));
             }
         }
         return valueStr;
@@ -182,7 +177,9 @@ public class IniFile
 
     private static bool IsValidProperty(string objectName, string propertyName, object? propertyValue, IniPropertyAttribute? propertyAttibute)
     {
-        if (propertyAttibute.Required && propertyValue == null)
+        object? defaultValue = propertyAttibute?.DefaulValue;
+
+        if (propertyAttibute.Required && propertyValue == null && defaultValue == null)
         {
             throw new ArgumentNullException($"Property value of \"{objectName}.{propertyName}\" is required");
         }
@@ -209,6 +206,7 @@ public class IniFile
                type == typeof(string) ||
                type == typeof(decimal) || type == typeof(decimal?) ||
                type == typeof(DateTime) || type == typeof(DateTime?) ||
+               type == typeof(int) || type == typeof(int?) ||
                type == typeof(Guid) ||  type == typeof(Guid?); 
     }
 

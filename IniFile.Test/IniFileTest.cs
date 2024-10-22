@@ -100,5 +100,33 @@ valEnum=500";
          Assert.Equal(expextedContent, iniContent);
     }
 
-   
+    [Fact]
+    public void RequiredFieldsMockTest()
+    {
+
+        Assert.Throws<ArgumentNullException>(() => {
+            var stringRequired = new RequiredFieldsMock(null);
+
+            var result = stringRequired.ToString();
+        });
+
+        var stringRequired = new RequiredFieldsMock("value");
+        var result = stringRequired.ToString();
+        Assert.Equal($"[RequiredTests]{Environment.NewLine}NullableString=value", result);
+
+    }
+
+    [Fact]
+    public void DefaultValuesTest()
+    {
+        var defaultValues = new DefaultValueMock();
+
+        var iniContent = defaultValues.ToString();
+
+
+
+    }
+
+
+
 }
