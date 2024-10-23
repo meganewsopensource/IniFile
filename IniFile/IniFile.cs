@@ -245,8 +245,6 @@ public class IniFile
         return type == typeof(bool) || type == typeof(bool?);
     }
     
-   
-    
 }
 
 public class IniFileSerializer
