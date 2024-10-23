@@ -55,6 +55,49 @@ public class MDFeMock : IniFileSerializer
     }
 }
 
+public class MDFe : IniFileSerializer
+{
+    [IniProperty("ide")]
+    private Ide Ide;
+
+    [IniProperty("perc")]
+    [ListIndexFormat("000")]
+    private IEnumerable<Percurso> Percursos;
+
+    [IniProperty("DESC")]
+    [ListIndexFormat("000")]
+    private IEnumerable<Descarga> Desc;
+
+    public MDFe()
+    {
+        Ide = new Ide(35, 1, 1, "58", "1");
+
+        Percursos =
+        [
+            new Percurso("BA"),
+            new Percurso("MG"),
+        ];
+
+        Desc =
+        [
+            new Descarga(
+                3518701,
+                "GURARUJA", 
+                [
+                    new InformacaoCte("98374949404949","errer","45655", [
+                        new Peri("kuy","test","ab00e"),
+                        new Peri("yml","test2","bibiou"),
+                    ]),
+                    new InformacaoCte("036848746484847","irurr","9789", [
+                        new Peri("kuy","test","ab00e"),
+                    ]),
+                     
+                ]
+            )
+        ];
+    }
+}
+
 
 public class Descarga(int codigoMuniciopioDescarga, string municipioDescarga, IEnumerable<InformacaoCte> infoCte)
 {

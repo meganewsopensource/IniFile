@@ -9,7 +9,16 @@ namespace IniFile.Test;
 public class IniFileTest
 {
 
+    [Fact]
+    public void Teste_teste()
+    {
+        var writer = new IniWriter();
+        writer.WriteParentSectionsInComment(true);
+        var instancia = new MDFe();
+        var iniContent = instancia.ToIniFile(writer);
 
+        IniFile.ObjectToIni(instancia, writer);
+    }
     
     [Fact]
     public void NestedSectionTest()

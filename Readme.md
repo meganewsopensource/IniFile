@@ -51,7 +51,7 @@ Obs.: Usar somente classes com fields privadas
 ## Serializando a classe:
 
   ### Opção 1: Herança de IniFileSerializer
-  * A instancia da classe já conterá a geração do conteúdo ini pelo método ToString()
+  * A instancia da classe já conterá a geração do conteúdo ini pelo método .ToString() ou .ToIniFile()
     ~~~csharp
     [IniSection("MySection")]
     public class MyClass : IniFileSerializer
@@ -122,8 +122,6 @@ Obs.: Usar somente classes com fields privadas
 * Também deve ser usado o mesmo atributo iniProperty
 
 
-
-
   ~~~csharp
   [IniSection("MySection")]
   public class MyClass : IniFileSerializer
@@ -170,8 +168,176 @@ Obs.: Usar somente classes com fields privadas
   NestedProperty2=Teste1
     ~~~
 
+
+#### Classes aninhadas
+
+```csharp
+public class MDFe : IniFileSerializer
+{
+    [IniProperty("ide")]
+    private Ide Ide;
+
+    [IniProperty("perc")]
+    private IEnumerable<Percurso> Percursos;
+
+    [IniProperty("DESC")]
+    private IEnumerable<Descarga> Desc;
+
+    public MDFe()
+    {
+        Ide = new Ide(35, 1, 1, "58", "1");
+
+        Percursos =
+        [
+            new Percurso("BA"),
+            new Percurso("MG"),
+        ];
+
+        Desc =
+        [
+            new Descarga(
+                3518701,
+                "GURARUJA", 
+                [
+                    new InformacaoCte("98374949404949","errer","45655", [
+                        new Peri("kuy","test","ab00e"),
+                        new Peri("yml","test2","bibiou"),
+                    ]),
+                    new InformacaoCte("036848746484847","irurr","9789", [
+                        new Peri("kuy","test","ab00e"),
+                    ]),
+                     
+                ]
+            )
+        ];
+    }
+}
+
+
+public class Ide(int uF, int ambiente, int tipoEmitente, string modelo, string serie)
+{
+    [IniProperty("cUF")]
+    private int UF = uF;
+    [IniProperty("tpAmb")]
+    private int Ambiente = ambiente;
+    [IniProperty("tpEmit")]
+    private int TipoEmitente = tipoEmitente;
+    [IniProperty("mod")]
+    private string Modelo = modelo;
+    [IniProperty("serie")]
+    private string Serie = serie;
+}
+
+public class Percurso(string uF)
+{
+    [IniProperty("UFPer")]
+    private string UF = uF;
+}
+
+public class Descarga(int codigoMuniciopioDescarga, string municipioDescarga, IEnumerable<InformacaoCte> infoCte)
+{
+    [IniProperty("cMunDescarga")]
+    private int CodigoMuniciopioDescarga = codigoMuniciopioDescarga;
+    [IniProperty("xMunDescarga")]
+    private string MunicipioDescarga = municipioDescarga;
+
+    [IniProperty("infCTe")]
+    [ListIndexFormat("000")]
+    private IEnumerable<InformacaoCte> InformacoesCte = infoCte;
+}
+
+```
+
+~~~ini
+#conteúdo do arquivo ini:
+[ide]
+cUF=35
+tpAmb=1
+tpEmit=1
+mod=58
+serie=1
+
+[perc001]
+UFPer=BA
+
+[perc002]
+UFPer=MG
+
+[DESC001]
+cMunDescarga=3518701
+xMunDescarga=GURARUJA
+
+[infCTe001001] #item 1 de DESC001
+chCTe=98374949404949
+SegCodBarra=errer
+indReentrega=45655
+
+[peri001001001] #item 1 de infCTe001001
+nONU=kuy
+xNomeAE=test
+xClaRisco=ab00e
+
+[peri001001002] #item 2 de infCTe001001
+nONU=yml
+xNomeAE=test2
+xClaRisco=bibiou
+
+[infCTe001002] #item 2 de DESC001
+chCTe=036848746484847
+SegCodBarra=irurr
+indReentrega=9789
+
+[peri001002001] #item 1 de infCTe001002
+nONU=kuy
+xNomeAE=test
+xClaRisco=ab00e
+~~~
+
+
 ---
 
+### Outras Opções
+
+Há duas opções de customização no gerador de arquivo ini:
+  - **ShowEmptySections**:<br>Exibe ou não as Seções sem valores. [valor padrão: false]
+  - **WriteParentSectionsInComment**:<br>Escreve como comentário ao lado de uma seção sua respectiva seção pai. (Propriedades de classes aninhadas) [valor padrão: false]. Formato: 
+      ```ini 
+      #item {indice} de {nome-da-seção-pai}
+      ```
+   
+  
+  Para usar essas opções, você deverá passar uma instância de implementação da interface IIniWriter com os valores setados para as funções de serialização:
+
+  * No método .ToIniFile() da classe de herança IniFileSerializer:
+   ```csharp
+     var writer = new IniWriter();
+     writer.WriteParentSectionsInComment(true);
+     writer.ShowEmptySections(true);
+     var instancia = new MDFe();
+     var iniContent = instancia.ToIniFile(writer);
+   ```
+  * No método estático: 
+   ```csharp
+     var writer = new IniWriter();
+     writer.WriteParentSectionsInComment(true);
+     writer.ShowEmptySections(true);
+     var instancia = new MDFe();
+     var iniContent = IniFile.ObjectToIni(instancia, writer);
+   ```
+ * Conteúdo do arquivo ini:
+  ```ini
+  [EmptySection] 
+
+  
+  [DESC001]
+  ...
+
+  [infCTe001001] #item 1 de DESC001
+  ...
+  
+  ```
+
+---
 ### Atributos de Formatação
 
 ~~~csharp
