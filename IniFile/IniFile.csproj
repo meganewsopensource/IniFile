@@ -8,4 +8,9 @@
         <Description>help to create boot through entities</Description>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Remove="IIniBuilder.cs" />
+      <Compile Remove="IniBuilder.cs" />
+    </ItemGroup>
+
 </Project>
