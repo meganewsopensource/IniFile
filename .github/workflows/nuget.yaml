@@ -30,7 +30,7 @@ jobs:
       - name: Build solution and generate NuGet package
         run: |
           cd AttributeIniFile
-          dotnet pack -c Release -o out  
+          dotnet pack -c Release -o out AttributeIniFile.csproj 
 
       - name: Push generated package to GitHub registry
         run: dotnet nuget push ./<project>/out/*.nupkg --skip-duplicate --no-symbols true
