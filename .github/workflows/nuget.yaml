@@ -34,4 +34,4 @@ jobs:
           dotnet pack -c Release -o out AttributeIniFile.csproj 
 
       - name: Push generated package to GitHub registry
-        run: dotnet nuget push ./<project>/out/*.nupkg --skip-duplicate --no-symbols true
+        run: dotnet nuget push ./AttributeIniFile/out/*.nupkg --skip-duplicate --no-symbols true
