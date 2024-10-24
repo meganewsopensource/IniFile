@@ -27,11 +27,6 @@
     &lt;TestId&gt;xUnit::B8E79062-9092-4F5A-9C40-EA65F64DDF7F::net8.0::IniFile.Test.IniFileTest.TestTest&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	
-	
-	
-	
-	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ad090099_002D7f2f_002D4ef2_002Da351_002D23ba0f5d5ced/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Or&gt;
     &lt;TestAncestor&gt;

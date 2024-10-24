@@ -6,11 +6,25 @@
         <Nullable>enable</Nullable>
         <Title>IniFile</Title>
         <Description>help to create boot through entities</Description>
+        <RootNamespace>IniFile</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>2.0.1</Version>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReadmeFile>LICENSE</PackageReadmeFile>
+
     </PropertyGroup>
 
     <ItemGroup>
       <Compile Remove="IIniBuilder.cs" />
       <Compile Remove="IniBuilder.cs" />
     </ItemGroup>
+    
+    <ItemGroup>
+  
+        <None Include="..\Readme.md" Pack="true" PackagePath="\"/>
+        <None Include="..\LICENSE" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+
 
 </Project>
