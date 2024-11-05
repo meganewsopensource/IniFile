@@ -3,7 +3,7 @@ name: NuGet Generation
 on:
   push:
     branches:
-      - dev
+      - devpipe
   pull_request:
     types: [closed]
     branches:
