@@ -55,48 +55,46 @@ public class IniFile
                 return;
             }
 
-            if (IsEnumType(propertyType))
+            if (iniPropertyAttribute!.Required || (!iniPropertyAttribute!.Required && propertyValue?.ToString() != iniPropertyAttribute?.DefaulValue))
             {
-                section?.AddItem(propertyName, IniEnumField(propertyValue));
-            }
-            else if (IsFloatType(propertyType))
-            {
-                section?.AddItem(propertyName, IniDoubleField(property, serializableObject, iniPropertyAttribute?.DefaulValue));
-            }
-            else if (IsDateTimeType(propertyType))
-            {
-                section?.AddItem(propertyName, IniDateTimeField(property, serializableObject, iniPropertyAttribute?.DefaulValue));
-            }
-            else if (IsBoolType(propertyType))
-            {
-                section?.AddItem(propertyName, IniBoolField(property, serializableObject, iniPropertyAttribute?.DefaulValue));
-            }
-            else if (IsSimpleType(propertyType))
-            {
-                section?.AddItem(propertyName, propertyValue?.ToString());
-            }
-            else if (IsEnumerable(propertyType))
-            {
-                if (propertyValue != null)
+                Section? newSection;
+                switch (propertyType)
                 {
-                    var listIndexFormatAttribute = property.GetCustomAttribute<ListIndexFormatAttribute>();
-                    var listIndexFormat = listIndexFormatAttribute != null && !string.IsNullOrEmpty(listIndexFormatAttribute.DisplayFormat) ? listIndexFormatAttribute.DisplayFormat : ListIndexFormatAttribute.DefaultDisplayFormat;
-                  
-                    foreach (var itemSerializableObject in (IEnumerable)propertyValue)
-                    {
-                        var newSection = iniWriter.CreateListItemSection(propertyName,listIndexFormat, parentSection);
-                        WriteToIni(iniWriter,itemSerializableObject, newSection, newSection);
-                    }
-                }
-            }
-            else if (IsClass(propertyType))
-            {
-                var newSection = iniWriter.CreateSection(propertyName);
-                WriteToIni(iniWriter,propertyValue,newSection, parentSection);
-            }
-            else
-            {
-                throw new NotImplementedException("Property " + property.Name + " is not implemented");
+                    case var _ when IsEnumType(propertyType) :
+                        section?.AddItem(propertyName, IniEnumField(propertyValue));
+                        break;
+                    case var _ when IsFloatType(propertyType) :
+                        section?.AddItem(propertyName, IniDoubleField(property, serializableObject, iniPropertyAttribute?.DefaulValue));
+                        break; 
+                    case var _ when IsDateTimeType(propertyType) :
+                        section?.AddItem(propertyName, IniDateTimeField(property, serializableObject, iniPropertyAttribute?.DefaulValue));
+                        break;
+                    case var _ when IsBoolType(propertyType) : 
+                        section?.AddItem(propertyName, IniBoolField(property, serializableObject, iniPropertyAttribute?.DefaulValue));
+                        break;
+                    case var _ when IsSimpleType(propertyType) :
+                        section?.AddItem(propertyName, propertyValue?.ToString());
+                        break;
+                    case var _ when IsEnumerable(propertyType) :
+                        if (propertyValue != null)
+                        {
+                            var listIndexFormatAttribute = property.GetCustomAttribute<ListIndexFormatAttribute>();
+                            var listIndexFormat = listIndexFormatAttribute != null && !string.IsNullOrEmpty(listIndexFormatAttribute.DisplayFormat) ? listIndexFormatAttribute.DisplayFormat : ListIndexFormatAttribute.DefaultDisplayFormat;
+                          
+                            foreach (var itemSerializableObject in (IEnumerable)propertyValue)
+                            {
+                                newSection = iniWriter.CreateListItemSection(propertyName,listIndexFormat, parentSection);
+                                WriteToIni(iniWriter,itemSerializableObject, newSection, newSection);
+                            }
+                        }
+                        break;
+                    case var _ when IsClass(propertyType) :
+                        newSection = iniWriter.CreateSection(propertyName);
+                        WriteToIni(iniWriter,propertyValue,newSection, parentSection);
+                        break;
+                    default:
+                        throw new NotImplementedException("Property " + property.Name + " is not implemented");
+                } 
             }
         }
     }

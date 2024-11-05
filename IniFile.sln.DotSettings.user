@@ -12,21 +12,9 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AStringBuilder_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Ftiago_002Esouza_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E2_003Fresharper_002Dhost_003FSourcesCache_003Fc6a25ea096494870a1dd94f188bc2634db58c9faa8b319e415cadf49b913d1a_003FStringBuilder_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ATestInvoker_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Ftiago_002Esouza_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E2_003Fresharper_002Dhost_003FSourcesCache_003Fc3ec25c53b94f51fa21da479c513e551efee2b5ae49a79934686d2bb714d46_003FTestInvoker_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AThrowHelper_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Ftiago_002Esouza_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E2_003Fresharper_002Dhost_003FSourcesCache_003F2c8e7ca976f350cba9836d5565dac56b11e0b56656fa786460eb1395857a6fa_003FThrowHelper_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=19d49bfb_002D00c8_002D4adb_002Dac72_002Dc4ad47ccdaee/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="TestTest #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::B8E79062-9092-4F5A-9C40-EA65F64DDF7F::net8.0::IniFile.Test.IniFileTest.TestTest&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a1196467_002Ddb96_002D494f_002Dae5a_002D8bbcb34ffbce/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="TestTest #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::B8E79062-9092-4F5A-9C40-EA65F64DDF7F::net8.0::IniFile.Test.IniFileTest.TestTest&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a7226240_002D5347_002D4084_002Dabda_002D66fa46c2bb6b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="TestTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::B8E79062-9092-4F5A-9C40-EA65F64DDF7F::net8.0::IniFile.Test.IniFileTest.TestTest&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
+	
+	
+	
 	
 	
 	
@@ -51,8 +39,4 @@
     &lt;ProjectFile&gt;B8E79062-9092-4F5A-9C40-EA65F64DDF7F/f:IniWriterTest.cs&lt;/ProjectFile&gt;&#xD;
   &lt;/Or&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ede46658_002D2e3e_002D48ac_002D8bda_002Db4510531302f/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="TestTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::B8E79062-9092-4F5A-9C40-EA65F64DDF7F::net8.0::IniFile.Test.IniFileTest.TestTest&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
+	</wpf:ResourceDictionary>
