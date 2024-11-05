@@ -30,9 +30,7 @@ jobs:
           cd AttributeIniFile
           dotnet build AttributeIniFile.csproj -c Release
           dotnet pack -c Release -o out AttributeIniFile.csproj 
-
-      - name: Push generated package to GitHub registry
+     
+      - name: echo token
         run: |
           echo $NUGET_AUTH_TOKEN 
-          dotnet nuget push "./AttributeIniFile/out/*.nupkg" --api-key "$NUGET_AUTH_TOKEN" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
