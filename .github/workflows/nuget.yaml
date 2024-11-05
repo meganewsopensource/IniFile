@@ -11,10 +11,9 @@ on:
 
 jobs:
   build:
+    environment: Env
     runs-on: ubuntu-latest
     name: Update NuGet package
-    environment:
-      name: Env
     steps:
 
       - name: Checkout repository
