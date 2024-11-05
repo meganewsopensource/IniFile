@@ -23,7 +23,7 @@ jobs:
       - name: Setup .NET Core @ Latest
         uses: actions/setup-dotnet@v1
         env:
-          NUGET_AUTH_TOKEN: ${{secrets.NUGET_API_KEY}}
+          NUGET_AUTH_TOKEN: ${{ secrets.CHAVE }}
 
       - name: Build solution and generate NuGet package
         run: |
