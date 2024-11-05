@@ -22,7 +22,7 @@ public class MDFeMock : IniFileSerializer
     {
         Ide = new Ide(35, 1, 1, "58", "1");
 
-        Emitente = new Emitente("12345678", "123", "Nome", "nome fantasia", "Rua das flores", "12", "");
+        Emitente = new Emitente("12345678", "123", "Nome", "nome fantasia", "Rua das flores", "12", "", "");
 
         Percursos =
         [
@@ -160,8 +160,10 @@ public class Percurso(string uF)
     private string UF = uF;
 }
 
-public class Emitente(string cNPJCPF, string iE, string nome, string fantasia, string logradouro, string numero, string complemento)
+public class Emitente(string cNPJCPF, string iE, string nome, string fantasia, string logradouro, string numero, string complemento, string apelido)
 {
+    [IniProperty("xApelido", "", false)]
+    private string Apelido = apelido;
     [IniProperty("CNPJCPF")]
     private string CNPJCPF = cNPJCPF;
     [IniProperty("IE")]

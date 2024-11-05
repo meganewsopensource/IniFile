@@ -92,7 +92,6 @@ valor_info_cte_mais_outra_dentro=valor
 valorPriInterno=Valor";
 
         Assert.Equal(expectedIniContent, iniContent);
-
     }
 
 
@@ -142,7 +141,6 @@ property1=value1
 property1=value1";
         
         Assert.Equal(expectedIniContent, iniContent);
-       
     }
 
 
@@ -157,10 +155,6 @@ property1=value1";
         var expectedIniContent = "[Section1]";
        
         Assert.Equal(iniContent, expectedIniContent);
-        
-        
-        File.WriteAllText("C:\\v2\\IniWriterShowEmptySectionsTest.ini",iniWriter.ToString());
-
     }
     
     [Fact]
@@ -174,6 +168,5 @@ property1=value1";
         var expectedIniContent = "";
        
         Assert.Equal(iniContent, expectedIniContent);
-
     }
 }
