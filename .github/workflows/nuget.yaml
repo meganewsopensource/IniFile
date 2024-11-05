@@ -1,0 +1,35 @@
+name: NuGet Generation
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Update NuGet package
+    environment:
+      name: Env
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Setup .NET Core @ Latest
+        uses: actions/setup-dotnet@v1
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.NUGET_API_KEY}}
+
+      - name: Build solution and generate NuGet package
+        run: |
+          cd AttributeIniFile
+          dotnet build AttributeIniFile.csproj -c Release
+          dotnet pack -c Release -o out AttributeIniFile.csproj 
+
+      - name: Push generated package to GitHub registry
+        run: dotnet nuget push ./out/*.nupkg --api-key $NUGET_AUTH_TOKEN  --source https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols true
