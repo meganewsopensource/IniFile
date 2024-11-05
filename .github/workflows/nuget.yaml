@@ -33,3 +33,7 @@ jobs:
       - name: echo token
         run: |
           echo $NUGET_AUTH_TOKEN 
+      - name: Publicar pacote NuGet
+        run: dotnet nuget push "./AttributeIniFile/out/*.nupkg" --api-key "$NUGET_AUTH_TOKEN" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.CHAVE }}
