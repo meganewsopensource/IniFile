@@ -9,8 +9,10 @@ public class InformacaoCIOTMock : IniFileSerializer
     private string _CPF;
     [IniProperty("CNPJ","0",false)]
     private string _CNPJ;
+    [IniProperty("enumTipo", 0, false)] 
+    private ushort _Tipo;
 
-    public InformacaoCIOTMock(string ciot, string documento)
+    public InformacaoCIOTMock(string ciot, string documento, ushort tipo = 0)
     {
         _CIOT = ciot;
         _CPF = "0";
@@ -24,5 +26,7 @@ public class InformacaoCIOTMock : IniFileSerializer
         {
             _CNPJ = documento;
         }
+
+        _Tipo = tipo;
     }
 }
