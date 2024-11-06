@@ -7,7 +7,7 @@
         <Title>IniFile</Title>
         <Description>help to create boot through entities</Description>
         <RootNamespace>IniFile</RootNamespace>
-        <Version>2.2.1</Version>
+        <Version>2.2.2</Version>
     </PropertyGroup>
 
     <ItemGroup>

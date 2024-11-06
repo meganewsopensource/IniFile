@@ -55,7 +55,7 @@ public class IniFile
                 return;
             }
             
-            if (iniPropertyAttribute!.Required || (!iniPropertyAttribute!.Required && (propertyValue?.ToString() != (string?)iniPropertyAttribute?.DefaulValue)))
+            if (iniPropertyAttribute!.Required || (!iniPropertyAttribute!.Required && (propertyValue?.ToString() != iniPropertyAttribute?.DefaulValue.ToString())))
             {
                 Section? newSection;
                 switch (propertyType)
