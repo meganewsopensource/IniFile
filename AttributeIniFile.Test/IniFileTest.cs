@@ -1,6 +1,4 @@
-using System.Collections.Immutable;
 using IniFile.Test.Models;
-using static IniFile.IniFile;
 
 namespace IniFile.Test;
 
@@ -138,6 +136,13 @@ EnumValue=1";
         Assert.Equal(expectedIniContent, iniContent);
     }
 
-
-
+    [Fact]
+    public void RequiredFieldsOptional()
+    {
+        var iniTexto = new InformacaoCIOTMock("123456", "12345678945").ToIniFile();
+        var textoEsperado = @"[teste]
+CIOT=123456
+CPF=12345678945";
+        Assert.Equal(textoEsperado, iniTexto);
+    }
 }
