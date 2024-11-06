@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IniFile", "IniFile\IniFile.csproj", "{3FB7A8CC-C04C-4D7D-9EEA-4F476FCB6778}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttributeIniFile", "AttributeIniFile\AttributeIniFile.csproj", "{3FB7A8CC-C04C-4D7D-9EEA-4F476FCB6778}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IniFile.Test", "IniFile.Test\IniFile.Test.csproj", "{B8E79062-9092-4F5A-9C40-EA65F64DDF7F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttributeIniFile.Test", "AttributeIniFile.Test\AttributeIniFile.Test.csproj", "{B8E79062-9092-4F5A-9C40-EA65F64DDF7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

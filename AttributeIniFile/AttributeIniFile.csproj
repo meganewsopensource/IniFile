@@ -6,6 +6,8 @@
         <Nullable>enable</Nullable>
         <Title>IniFile</Title>
         <Description>help to create boot through entities</Description>
+        <RootNamespace>IniFile</RootNamespace>
+        <Version>2.2.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
